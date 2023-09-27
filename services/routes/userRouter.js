@@ -1,17 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const router = require("express").Router();
-const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const pool = require("../hooks/usePool").default;
 
-// Bağlantı havuzu oluşturun
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "gapil",
-  password: "Test1234",
-  database: "mydb",
-});
+dotenv.config();
 
+const secretKey = process.env.SECRET_KEY;
 router.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -20,29 +16,27 @@ router.post("/signup", async (req, res) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.query(sql, [email, password], (queryErr, results) => {
-        connection.release(); // Bağlantıyı geri bırak
+        connection.release();
 
         if (queryErr) {
-          console.error("Kayıt eklenirken hata oluştu: " + queryErr.message);
-          return res
-            .status(500)
-            .json({ error: "Kullanıcı kaydı gerçekleştirilemedi." });
+          console.error("Error adding a record: " + queryErr.message);
+          return res.status(500).json({ error: "Error adding a register" });
         }
-        const token = jwt.sign({ email }, "tauderindevlet");
-        console.log("Yeni kayıt başarıyla eklendi.");
+        const token = jwt.sign({ email }, secretKey);
+        console.log("New record added successfully.");
         res.status(201).json({ user: { email }, token });
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Kullanıcı kaydı gerçekleştirilemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Error adding a register" });
   }
 });
 router.post("/signin", async (req, res) => {
@@ -53,18 +47,20 @@ router.post("/signin", async (req, res) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.query(sql, [email], (queryErr, results) => {
-        connection.release(); // Bağlantıyı geri bırak
+        connection.release();
 
         if (queryErr) {
-          console.error("Sorgu yapılırken hata oluştu: " + queryErr.message);
-          return res.status(500).json({ error: "Giriş yapılamadı." });
+          console.error(
+            "An error occurred while querying: " + queryErr.message
+          );
+          return res.status(500).json({ error: "Failed to sign in." });
         }
 
         if (results.length === 0) {
@@ -76,19 +72,17 @@ router.post("/signin", async (req, res) => {
           return res.status(401).json({ error: "Wrong Password." });
         }
 
-        const token = jwt.sign({ email }, "tauderindevlet");
+        const token = jwt.sign({ email }, secretKey);
         const type = "parent";
-        console.log("Giriş başarılı.");
+        console.log("Logined successfully");
         res.status(200).json({ user, token, type });
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Giriş yapılamadı." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Failed to sign in." });
   }
 });
-
-//student
 
 router.get("/get-students/:parentId", async (req, res) => {
   try {
@@ -97,26 +91,30 @@ router.get("/get-students/:parentId", async (req, res) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.query(sql, [parentId], (queryErr, results) => {
-        connection.release(); // Bağlantıyı geri bırak
+        connection.release();
 
         if (queryErr) {
-          console.error("Sorgu yapılırken hata oluştu: " + queryErr.message);
-          return res.status(500).json({ error: "Öğrenciler getirilemedi." });
+          console.error(
+            "An error occurred while querying: " + queryErr.message
+          );
+          return res
+            .status(500)
+            .json({ error: "Students could not be fetched." });
         }
 
         res.status(200).json({ students: results });
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Öğrenciler getirilemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Students could not be fetched." });
   }
 });
 router.post("/add-student", async (req, res) => {
@@ -127,21 +125,22 @@ router.post("/add-student", async (req, res) => {
     const selectSql = "SELECT LAST_INSERT_ID() AS student_id";
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.beginTransaction((transactionErr) => {
         if (transactionErr) {
           console.error(
-            "Transaction başlatılırken hata oluştu: " + transactionErr.message
+            "An error starting the transaction: " + transactionErr.message
           );
-          return res.status(500).json({ error: "Transaction başlatılamadı." });
+          return res
+            .status(500)
+            .json({ error: "Failed to initiate transaction." });
         }
 
-        // Öğrenci ekleme sorgusu
         connection.query(
           insertSql,
           [name, password, graduation, parent_id],
@@ -149,20 +148,24 @@ router.post("/add-student", async (req, res) => {
             if (queryErr) {
               connection.rollback(() => {
                 console.error(
-                  "Sorgu yapılırken hata oluştu: " + queryErr.message
+                  "An error occurred while querying: " + queryErr.message
                 );
-                return res.status(500).json({ error: "Öğrenci eklenemedi." });
+                return res
+                  .status(500)
+                  .json({ error: "Failed to add a student." });
               });
             }
 
-            // Eklenen öğrencinin ID'sini al
             connection.query(selectSql, (selectQueryErr, selectResults) => {
               if (selectQueryErr) {
                 connection.rollback(() => {
                   console.error(
-                    "Sorgu yapılırken hata oluştu: " + selectQueryErr.message
+                    "An error occurred while querying: " +
+                      selectQueryErr.message
                   );
-                  return res.status(500).json({ error: "Öğrenci eklenemedi." });
+                  return res
+                    .status(500)
+                    .json({ error: "Failed to add a student." });
                 });
               }
 
@@ -172,12 +175,11 @@ router.post("/add-student", async (req, res) => {
                 if (commitErr) {
                   connection.rollback(() => {
                     console.error(
-                      "Transaction commit edilirken hata oluştu: " +
-                        commitErr.message
+                      "Error committing transaction: " + commitErr.message
                     );
                     return res
                       .status(500)
-                      .json({ error: "Öğrenci eklenemedi." });
+                      .json({ error: "Failed to add a student." });
                   });
                 }
 
@@ -223,7 +225,7 @@ router.post("/add-student", async (req, res) => {
                     pool.getConnection((err, connection) => {
                       if (err) {
                         console.error(
-                          "MySQL bağlantısı alınamadı: " + err.message
+                          "Failed to get MySQL connection: " + err.message
                         );
                         return;
                       }
@@ -235,7 +237,7 @@ router.post("/add-student", async (req, res) => {
                           (queryErr, results) => {
                             if (queryErr) {
                               console.error(
-                                "Sorgu yapılırken hata oluştu: " +
+                                "An error occurred while querying: " +
                                   queryErr.message
                               );
                             }
@@ -247,16 +249,17 @@ router.post("/add-student", async (req, res) => {
                     });
                   } catch (error) {
                     console.error(
-                      "Beklenmeyen bir hata oluştu: " + error.message
+                      "An unexpected error occurred: " + error.message
                     );
                   }
                 } catch (error) {
                   console.log("Handle Course error:", error);
                 }
 
-                res
-                  .status(201)
-                  .json({ message: "Öğrenci başarıyla eklendi.", student_id });
+                res.status(201).json({
+                  message: "The stuned saved successfully",
+                  student_id,
+                });
               });
             });
           }
@@ -264,8 +267,8 @@ router.post("/add-student", async (req, res) => {
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Öğrenci eklenemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Failed to add a student." });
   }
 });
 
@@ -278,27 +281,31 @@ router.delete("/delete-student/:id", async (req, res) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.beginTransaction((transactionErr) => {
         if (transactionErr) {
           console.error(
-            "Transaction başlatılırken hata oluştu: " + transactionErr.message
+            "An error starting the transaction: " + transactionErr.message
           );
-          return res.status(500).json({ error: "Transaction başlatılamadı." });
+          return res
+            .status(500)
+            .json({ error: "Failed to initiate transaction." });
         }
 
         connection.query(sql2, [studentId], (queryErr, results) => {
           if (queryErr) {
             connection.rollback(() => {
               console.error(
-                "Sorgu yapılırken hata oluştu: " + queryErr.message
+                "An error occurred while querying: " + queryErr.message
               );
-              return res.status(500).json({ error: "Dersler silinemedi." });
+              return res
+                .status(500)
+                .json({ error: "The courses could not be deleted." });
             });
           }
 
@@ -306,7 +313,7 @@ router.delete("/delete-student/:id", async (req, res) => {
             connection.rollback(() => {
               return res
                 .status(404)
-                .json({ error: "Öğrenci dersi bulunamadı." });
+                .json({ error: "Student course not found." });
             });
           }
 
@@ -314,15 +321,17 @@ router.delete("/delete-student/:id", async (req, res) => {
             if (queryErr) {
               connection.rollback(() => {
                 console.error(
-                  "Sorgu yapılırken hata oluştu: " + queryErr.message
+                  "An error occurred while querying: " + queryErr.message
                 );
-                return res.status(500).json({ error: "Öğrenci silinemedi." });
+                return res
+                  .status(500)
+                  .json({ error: "The student could not be deleted." });
               });
             }
 
             if (results.affectedRows === 0) {
               connection.rollback(() => {
-                return res.status(404).json({ error: "Öğrenci bulunamadı." });
+                return res.status(404).json({ error: "Student not found." });
               });
             }
 
@@ -330,24 +339,25 @@ router.delete("/delete-student/:id", async (req, res) => {
               if (commitErr) {
                 connection.rollback(() => {
                   console.error(
-                    "Transaction commit edilirken hata oluştu: " +
-                      commitErr.message
+                    "Error committing transaction: " + commitErr.message
                   );
-                  return res.status(500).json({ error: "Öğrenci silinemedi." });
+                  return res
+                    .status(500)
+                    .json({ error: "The student could not be deleted." });
                 });
               }
 
               res
                 .status(200)
-                .json({ message: "Öğrenci ve dersleri başarıyla silindi." });
+                .json({ message: "Student and courses successfully deleted." });
             });
           });
         });
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Öğrenci silinemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "The student could not be deleted." });
   }
 });
 

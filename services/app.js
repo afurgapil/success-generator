@@ -10,9 +10,9 @@ app.use(express.json());
 app.use(cors());
 dotenv.config();
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  service: process.env.SERVICE,
   auth: {
-    user: "apicookbook@gmail.com",
+    user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASSWORD,
   },
 });
@@ -33,24 +33,22 @@ app.post("/get-info", async (req, res) => {
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log("E-posta gönderilirken hata oluştu:", error);
-        res.status(500).json({ message: "zortladik" });
+        console.log("Error sending email:", error);
+        res.status(500).json({ message: "Error sending email:" });
       } else {
-        console.log("E-posta başarıyla gönderildi:", info.response);
+        console.log("Email was sent successfully:", info.response);
         res.status(200).json({
-          message: "E-posta başarıyla gönderildi.Mail kutunuzu kontrol ediniz",
+          message: "The email was sent successfully. Check your mailbox",
         });
       }
     });
   } catch (err) {
-    console.log("Hata oluştu:", err);
-    res
-      .status(500)
-      .json({ message: "Bir hata oluştu, lütfen tekrar deneyin." });
+    console.log("An error occurred:", err);
+    res.status(500).json({ message: "An error occurred, please try again." });
   }
 });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Sunucu ${port} portunda çalışıyor.`);
+  console.log(`The server is running on port ${port}.`);
 });

@@ -2,16 +2,12 @@
 /* eslint-disable no-undef */
 
 const router = require("express").Router();
-const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const pool = require("../hooks/usePool").default;
+dotenv.config();
 
-// Bağlantı havuzu oluşturun
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "gapil",
-  password: "Test1234",
-  database: "mydb",
-});
+const secretKey = process.env.SECRET_KEY;
 
 router.post("/signin", async (req, res) => {
   try {
@@ -20,18 +16,20 @@ router.post("/signin", async (req, res) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.query(sql, [name], (queryErr, results) => {
-        connection.release(); // Bağlantıyı geri bırak
+        connection.release();
 
         if (queryErr) {
-          console.error("Sorgu yapılırken hata oluştu: " + queryErr.message);
-          return res.status(500).json({ error: "Giriş yapılamadı." });
+          console.error(
+            "An error occurred while querying: " + queryErr.message
+          );
+          return res.status(500).json({ error: "Failed to sign in." });
         }
 
         if (results.length === 0) {
@@ -43,15 +41,15 @@ router.post("/signin", async (req, res) => {
           return res.status(401).json({ error: "Wrong Password." });
         }
 
-        const token = jwt.sign({ name }, "tauderindevlet");
+        const token = jwt.sign({ name }, secretKey);
         const type = "student";
 
         res.status(200).json({ user, token, type });
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Giriş yapılamadı." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Failed to sign in." });
   }
 });
 router.get("/get-courses/:studentId", async (req, res) => {
@@ -61,18 +59,22 @@ router.get("/get-courses/:studentId", async (req, res) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.query(sql, [studentId], (queryErr, results) => {
         connection.release();
 
         if (queryErr) {
-          console.error("Sorgu yapılırken hata oluştu: " + queryErr.message);
-          return res.status(500).json({ error: "Dersler getirilemedi." });
+          console.error(
+            "An error occurred while querying: " + queryErr.message
+          );
+          return res
+            .status(500)
+            .json({ error: "Courses could not be fetched." });
         }
         const group1 = results.slice(0, 4);
         const group2 = results.slice(4);
@@ -81,8 +83,8 @@ router.get("/get-courses/:studentId", async (req, res) => {
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Dersler getirilemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Courses could not be fetched." });
   }
 });
 router.post("/add-result/general", async (req, res) => {
@@ -100,13 +102,12 @@ router.post("/add-result/general", async (req, res) => {
       "INSERT INTO Exam_Results (Type, Date, Student_Id, TrueAnswer,FalseAnswer,EmptyAnswer,Result) VALUES (?, ?, ?, ?,?,?,?)";
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
-      // Sonuc ekleme sorgusu
       connection.query(
         insertSql,
         [type, date, stundetId, trueAnswer, falseAnswer, emptyAnswer, result],
@@ -114,17 +115,19 @@ router.post("/add-result/general", async (req, res) => {
           if (queryErr) {
             connection.rollback(() => {
               console.error(
-                "Sorgu yapılırken hata oluştu: " + queryErr.message
+                "An error occurred while querying: " + queryErr.message
               );
-              return res.status(500).json({ error: "Result eklenemedi." });
+              return res
+                .status(500)
+                .json({ error: "Result could not be saved." });
             });
           }
         }
       );
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Öğrenci eklenemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Failed to add a student." });
   }
 });
 router.post("/add-result/course", async (req, res) => {
@@ -142,13 +145,12 @@ router.post("/add-result/course", async (req, res) => {
       "INSERT INTO Course_Results (Course,Course_Id, Date, TrueAnswer, FalseAnswer, EmptyAnswer, Result) VALUES (?,?, ?, ?, ?,?,?)";
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
-      // Sonuc ekleme sorgusu
       connection.query(
         insertSql,
         [course, courseId, date, trueAnswer, falseAnswer, emptyAnswer, result],
@@ -156,17 +158,19 @@ router.post("/add-result/course", async (req, res) => {
           if (queryErr) {
             connection.rollback(() => {
               console.error(
-                "Sorgu yapılırken hata oluştu: " + queryErr.message
+                "An error occurred while querying: " + queryErr.message
               );
-              return res.status(500).json({ error: "Result eklenemedi." });
+              return res
+                .status(500)
+                .json({ error: "Result could not be saved." });
             });
           }
         }
       );
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Öğrenci eklenemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Failed to add a student." });
   }
 });
 router.get("/get-examResults/:studentId", async (req, res) => {
@@ -176,25 +180,29 @@ router.get("/get-examResults/:studentId", async (req, res) => {
 
     pool.getConnection((err, connection) => {
       if (err) {
-        console.error("MySQL bağlantısı alınamadı: " + err.message);
+        console.error("Failed to get MySQL connection: " + err.message);
         return res
           .status(500)
-          .json({ error: "Veritabanı bağlantısı alınamadı." });
+          .json({ error: "Failed to get database connection." });
       }
 
       connection.query(sql, [studentId], (queryErr, results) => {
         connection.release();
 
         if (queryErr) {
-          console.error("Sorgu yapılırken hata oluştu: " + queryErr.message);
-          return res.status(500).json({ error: "Sonuclar getirilemedi." });
+          console.error(
+            "An error occurred while querying: " + queryErr.message
+          );
+          return res
+            .status(500)
+            .json({ error: "Results could not be fetched." });
         }
         res.status(200).json({ data: results });
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Sonuclar getirilemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Results could not be fetched." });
   }
 });
 router.get("/get-courseResults/:studentId", async (req, res) => {
@@ -204,26 +212,28 @@ router.get("/get-courseResults/:studentId", async (req, res) => {
     pool.query(coursesSql, [studentId], (coursesQueryErr, coursesResults) => {
       if (coursesQueryErr) {
         console.error(
-          "Sorgu yapılırken hata oluştu: " + coursesQueryErr.message
+          "An error occurred while querying: " + coursesQueryErr.message
         );
-        return res.status(500).json({ error: "Dersler getirilemedi." });
+        return res.status(500).json({ error: "Courses could not be fetched." });
       }
       const courseIds = coursesResults.map((course) => course.Id);
       const resultsSql = "SELECT * FROM Course_Results WHERE Course_Id IN (?)";
       pool.query(resultsSql, [courseIds], (resultsQueryErr, results) => {
         if (resultsQueryErr) {
           console.error(
-            "Sorgu yapılırken hata oluştu: " + resultsQueryErr.message
+            "An error occurred while querying: " + resultsQueryErr.message
           );
-          return res.status(500).json({ error: "Sonuclar getirilemedi." });
+          return res
+            .status(500)
+            .json({ error: "Results could not be fetched." });
         }
 
         res.status(200).json({ data: results });
       });
     });
   } catch (error) {
-    console.error("Beklenmeyen bir hata oluştu: " + error.message);
-    res.status(500).json({ error: "Dersler getirilemedi." });
+    console.error("An unexpected error occurred: " + error.message);
+    res.status(500).json({ error: "Courses could not be fetched." });
   }
 });
 module.exports = router;
