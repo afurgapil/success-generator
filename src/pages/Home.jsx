@@ -243,7 +243,7 @@ function Home() {
           <div className="relative mx-auto max-w-4xl grid space-y-5 sm:space-y-10">
             <div className="text-center">
               <h1 className="text-3xl text-gray-800 font-bold sm:text-5xl lg:text-6xl lg:leading-tight dark:text-gray-200">
-                Turn Your Past Mistakes into{" "}
+                Turn Your Past Mistakes into
                 <span className="text-blue-500">Future Successes</span>
               </h1>
             </div>
