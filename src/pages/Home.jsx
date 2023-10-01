@@ -188,12 +188,12 @@ function Home() {
       </div>
       <div className="max-h-screen py-8 border-t border-white mt-96 md:mt-auto  ">
         <div className="flex flex-col items-center justify-start py-8 ">
-          <h2 className="text-white md:text-9xl text-5xl">How It Works?</h2>
+          <h2 className="text-white md:text-9xl text-5xl">Nasıl Çalışıyor?</h2>
           <h3 className="text-white md:text-7xl  text-4xl opacity-60">
-            How It Works?
+            Nasıl Çalışıyor?
           </h3>
           <h4 className="text-white md:text-5xl text-3xl opacity-30">
-            How It Works?
+            Nasıl Çalışıyor?
           </h4>
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center">
@@ -203,7 +203,7 @@ function Home() {
             </div>
             <div className="p-4 md:p-6">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300 dark:hover:text-white">
-                Analyse
+                Analiz
               </h3>
               <p className="mt-3 text-gray-500">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
@@ -216,7 +216,7 @@ function Home() {
             </div>
             <div className="p-4 md:p-6">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300 dark:hover:text-white">
-                Generate
+                İşlem
               </h3>
               <p className="mt-3 text-gray-500">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -229,7 +229,7 @@ function Home() {
             </div>
             <div className="p-4 md:p-6">
               <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300 dark:hover:text-white">
-                Analyse
+                Sonuç
               </h3>
               <p className="mt-3 text-gray-500">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
@@ -243,8 +243,12 @@ function Home() {
           <div className="relative mx-auto max-w-4xl grid space-y-5 sm:space-y-10">
             <div className="text-center">
               <h1 className="text-3xl text-gray-800 font-bold sm:text-5xl lg:text-6xl lg:leading-tight dark:text-gray-200">
-                Turn Your Past Mistakes into
-                <span className="text-blue-500">Future Successes</span>
+                Geçmiş hatalarınızı
+                <span className="text-blue-500">
+                  {" "}
+                  gelecekteki başarılarınıza{" "}
+                </span>
+                çevirin
               </h1>
             </div>
             <div className="sm:flex sm:justify-center sm:items-center text-center sm:text-left">
@@ -282,10 +286,10 @@ function Home() {
 
               <div className="pt-5 sm:pt-0 sm:pl-5">
                 <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                  Open Beta
+                  Açık Beta
                 </div>
                 <div className="text-sm text-gray-500">
-                  Rated best over 37k reviews
+                  37k'den fazla yorumla en iyi seçildi
                 </div>
               </div>
             </div>
@@ -296,7 +300,7 @@ function Home() {
                     type="email"
                     id="email"
                     className="py-3 px-4 block w-full border-transparent rounded-md text-sm sm:p-4 dark:bg-slate-900 dark:border-transparent dark:text-gray-400"
-                    placeholder="Your E-Mail"
+                    placeholder="E-Mail"
                     required
                     aria-describedby="email-error"
                     value={email}
@@ -308,7 +312,7 @@ function Home() {
                     className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm sm:p-4 dark:focus:ring-offset-gray-800"
                     type="submit"
                   >
-                    Get More
+                    Bilgi Al
                   </button>
                 </div>
               </div>

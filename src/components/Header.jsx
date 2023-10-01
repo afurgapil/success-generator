@@ -68,20 +68,20 @@ function Header() {
                 to="/"
                 aria-current="page"
               >
-                Home
+                Ana Sayfa
               </Link>
               <Link
                 className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 text-center "
                 to="/add-result"
               >
-                Add Result
+                Ekle
               </Link>
 
               <Link
                 className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 text-center "
                 to="/results"
               >
-                Results
+                Sonuçlar
               </Link>
               <Signout />
             </div>
@@ -95,20 +95,20 @@ function Header() {
                 to="/"
                 aria-current="page"
               >
-                Home
+                Ana Sayfa
               </Link>
               <Link
                 className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 text-center "
                 to="/profile"
               >
-                Profile
+                Profil
               </Link>
 
               <Link
                 className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 text-center "
                 to="/dashboard"
               >
-                Dashboard
+                İstatistikler
               </Link>
               <Signout />
             </div>
@@ -122,19 +122,19 @@ function Header() {
                 to="/"
                 aria-current="page"
               >
-                Home
+                Ana Sayfa
               </Link>
               <Link
                 to="/signin"
                 className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 text-center "
               >
-                Sign In
+                Giriş
               </Link>
               <Link
                 to="/signup"
                 className="font-medium text-gray-600 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-500 text-center "
               >
-                Sign Up
+                Kayıt
               </Link>
             </div>
           )}

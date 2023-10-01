@@ -65,7 +65,7 @@ function SignIn() {
     <div className="dark:bg-slate-900 bg-gray-100 flex min-h-screen items-start py-16">
       <div className="w-full max-w-md mx-auto p-6">
         <label className="flex items-center justify-center space-x-2 cursor-pointer">
-          <span className="text-gray-600">Student</span>
+          <span className="text-gray-600">Öğrenci</span>
           <div
             className={`w-14 h-7 bg-gray-300 rounded-full p-1 flex items-center ${
               isParent ? "bg-red-500" : "bg-indigo-500"
@@ -77,7 +77,7 @@ function SignIn() {
               } transition-transform duration-300 ease-in-out`}
             ></div>
           </div>
-          <span className="text-gray-600">Parent</span>
+          <span className="text-gray-600">Veli</span>
           <input
             type="checkbox"
             className="hidden"
@@ -92,15 +92,16 @@ function SignIn() {
             <div className="p-4 sm:p-7">
               <div className="text-center">
                 <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">
-                  Sign in
+                  Giriş
                 </h1>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                  Dont have an account yet?
+                  Henüz bir hesabınız yok mu?
                   <Link
                     className="text-blue-600 decoration-2 hover:underline font-medium"
                     to="/signup"
                   >
-                    Sign up here
+                    {" "}
+                    Kayıt Ol!
                   </Link>
                 </p>
               </div>
@@ -148,7 +149,7 @@ function SignIn() {
                         htmlFor="email"
                         className="block text-sm mb-2 dark:text-white"
                       >
-                        Email address
+                        E-Mail
                       </label>
                       <div className="relative">
                         <input
@@ -184,8 +185,7 @@ function SignIn() {
                         } text-xs text-red-600 mt-2"`}
                         id="email-error"
                       >
-                        Please include a valid email address so we can get back
-                        to you
+                        Lütfen geçerli bir mail adresi giriniz.
                       </p>
                     </div>
 
@@ -195,13 +195,13 @@ function SignIn() {
                           htmlFor="password"
                           className="block text-sm mb-2 dark:text-white"
                         >
-                          Password
+                          Şifre
                         </label>
                         <Link
                           className="text-sm text-blue-600 decoration-2 hover:underline font-medium"
                           to="/recover"
                         >
-                          Forgot password?
+                          Şifremi Unuttum
                         </Link>
                       </div>
                       <div className="relative">
@@ -238,7 +238,7 @@ function SignIn() {
                         } text-xs text-red-600 mt-2"`}
                         id="password-error"
                       >
-                        8+ characters required
+                        Minimum 8 karakter.
                       </p>
                     </div>
 
@@ -258,7 +258,7 @@ function SignIn() {
                           htmlFor="remember-me"
                           className="text-sm dark:text-white"
                         >
-                          Remember me
+                          Beni Hatırla
                         </label>
                       </div>
                     </div>
@@ -274,7 +274,7 @@ function SignIn() {
                       type="submit"
                       className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
                     >
-                      Sign in
+                      Giriş
                     </button>
                   </div>
                 </form>
@@ -286,7 +286,7 @@ function SignIn() {
             <div className="p-4 sm:p-7">
               <div className="text-center">
                 <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">
-                  Sign in
+                  Giriş
                 </h1>
               </div>
               <div className="mt-5">
@@ -297,7 +297,7 @@ function SignIn() {
                         htmlFor="name"
                         className="block text-sm mb-2 dark:text-white"
                       >
-                        Name
+                        Ad
                       </label>
                       <div className="relative">
                         <input
@@ -321,7 +321,7 @@ function SignIn() {
                           htmlFor="password"
                           className="block text-sm mb-2 dark:text-white"
                         >
-                          Password
+                          Şifre
                         </label>
                       </div>
                       <div className="relative">
@@ -355,7 +355,7 @@ function SignIn() {
                           htmlFor="remember-me"
                           className="text-sm dark:text-white"
                         >
-                          Remember me
+                          Beni Hatırla
                         </label>
                       </div>
                     </div>
@@ -371,7 +371,7 @@ function SignIn() {
                       type="submit"
                       className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
                     >
-                      Sign in
+                      Giriş
                     </button>
                   </div>
                 </form>

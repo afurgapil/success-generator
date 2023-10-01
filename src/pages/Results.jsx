@@ -70,7 +70,7 @@ function Results() {
     <div className="bg-bg min-h-screen py-6 px-12 flex flex-col md:flex-col">
       <div className="flex flex-col my-4  justify-around items-center w-full">
         <h2 className="text-white text-center text-5xl font-bold mb-8 ">
-          General Exams
+          Genel Denemeler
         </h2>
         <div className="flex flex-col justify-start items-center  w-full">
           <ul className="flex flex-col justify-center w-full">
@@ -157,7 +157,7 @@ function Results() {
           </ul>
         </div>
         <h2 className="text-white text-center text-5xl font-bold mb-8 ">
-          Course Exams
+          Bölüm Denemeleri
         </h2>
         <div className="flex flex-col justify-start items-center w-full">
           <ul className="flex flex-col justify-center w-full">

@@ -68,15 +68,16 @@ function SignUp() {
           <div className="p-4 sm:p-7">
             <div className="text-center">
               <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">
-                Sign up
+                Kayıt Ol
               </h1>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Already have an account?
+                Zaten bir hesabınız var mı?
                 <Link
                   className="text-blue-600 decoration-2 hover:underline font-medium"
                   to="/signin"
                 >
-                  Sign in here
+                  {" "}
+                  Giriş Yap
                 </Link>
               </p>
             </div>
@@ -111,7 +112,7 @@ function SignUp() {
                       fill="#EB4335"
                     />
                   </svg>
-                  Sign up with Google
+                Kayıt Ol with Google
                 </button>
 
                 <div className="py-3 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:mr-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ml-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
@@ -125,7 +126,7 @@ function SignUp() {
                       htmlFor="email"
                       className="block text-sm mb-2 dark:text-white"
                     >
-                      Email address
+                      E-Mail
                     </label>
                     <div className="relative">
                       <input
@@ -161,8 +162,7 @@ function SignUp() {
                       }  text-xs text-red-600 mt-2`}
                       id="email-error"
                     >
-                      Please include a valid email address so we can get back to
-                      you
+                      Lütfen geçerli bir mail adresi giriniz.
                     </p>
                   </div>
 
@@ -171,7 +171,7 @@ function SignUp() {
                       htmlFor="password"
                       className="block text-sm mb-2 dark:text-white"
                     >
-                      Password
+                      Şifre
                     </label>
                     <div className="relative">
                       <input
@@ -208,7 +208,7 @@ function SignUp() {
                       } text-xs text-red-600 mt-2`}
                       id="password-error"
                     >
-                      8+ characters required
+                      Minimum 8 karakter.
                     </p>
                   </div>
                   <div>
@@ -216,7 +216,7 @@ function SignUp() {
                       htmlFor="confirm-password"
                       className="block text-sm mb-2 dark:text-white"
                     >
-                      Confirm Password
+                      Şifreyi Doğrulayınız
                     </label>
                     <div className="relative">
                       <input
@@ -252,7 +252,7 @@ function SignUp() {
                       } text-xs text-red-600 mt-2`}
                       id="confirm-password-error"
                     >
-                      Password does not match the password
+                      Şifreler eşleşmiyor.
                     </p>
                   </div>
 
@@ -272,13 +272,13 @@ function SignUp() {
                         htmlFor="remember-me"
                         className="text-sm dark:text-white"
                       >
-                        I accept the
                         <a
                           className="text-blue-600 decoration-2 hover:underline font-medium"
                           href="#"
                         >
-                          Terms and Conditions
-                        </a>
+                          Şartlar ve Koşulları
+                        </a>{" "}
+                        kabul ediyorum
                       </label>
                     </div>
                   </div>
@@ -294,7 +294,7 @@ function SignUp() {
                     type="submit"
                     className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
                   >
-                    Sign up
+                    Kayıt Ol
                   </button>
                 </div>
               </form>

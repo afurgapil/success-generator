@@ -43,7 +43,7 @@ function NotFound() {
                   strokeLinecap="round"
                 />
               </svg>
-              Back
+              Geri Dön
             </Link>
           </div>
         </div>

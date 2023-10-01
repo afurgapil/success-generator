@@ -1,8 +1,27 @@
 import { useState } from "react";
-
+import { isValidMail } from "../utils/isValidMail";
 function Recover() {
   const [email, setEmail] = useState("");
+  const [isValid, setIsValid] = useState(true);
 
+  // const checkPasswordValid = () => {
+  //   if (!isValidMail(email)) {
+  //     setIsValid(false);
+  //     return false;
+  //   }
+  //   return true;
+  // };
+  // const handleRecover = async (e) => {
+  //   e.preventDefault();
+  //   const isPasswordValid = checkPasswordValid();
+
+  //   if (!isPasswordValid) {
+  //     return;
+  //   }
+
+  //   try {
+  //   } catch (error) {}
+  // };
   return (
     <div className="dark:bg-slate-900 bg-gray-100 flex min-h-screen items-start py-16">
       <div className="w-full max-w-md mx-auto p-6">
@@ -10,17 +29,8 @@ function Recover() {
           <div className="p-4 sm:p-7">
             <div className="text-center">
               <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">
-                Forgot password?
+                Şifrenizi mi unuttunuz?
               </h1>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Remember your password?
-                <a
-                  className="text-blue-600 decoration-2 hover:underline font-medium"
-                  href="../examples/html/signin.html"
-                >
-                  Sign in here
-                </a>
-              </p>
             </div>
 
             <div className="mt-5">
@@ -31,7 +41,7 @@ function Recover() {
                       htmlFor="email"
                       className="block text-sm mb-2 dark:text-white"
                     >
-                      Email address
+                      E-Mail
                     </label>
                     <div className="relative">
                       <input
@@ -44,7 +54,11 @@ function Recover() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
-                      <div className="hidden absolute inset-y-0 right-0 flex items-center pointer-events-none pr-3">
+                      <div
+                        className={`${
+                          !isValid ? "flex" : "hidden"
+                        }  absolute inset-y-0 right-0 flex items-center pointer-events-none pr-3`}
+                      >
                         <svg
                           className="h-5 w-5 text-red-500"
                           width="16"
@@ -58,11 +72,12 @@ function Recover() {
                       </div>
                     </div>
                     <p
-                      className="hidden text-xs text-red-600 mt-2"
+                      className={`${
+                        !isValid ? "flex" : "hidden"
+                      } text-xs text-red-600 mt-2`}
                       id="email-error"
                     >
-                      Please include a valid email address so we can get back to
-                      you
+                      Lütfen geçerli bir mail adresi giriniz
                     </p>
                   </div>
 
@@ -70,7 +85,7 @@ function Recover() {
                     type="submit"
                     className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
                   >
-                    Reset password
+                    Şifreyi sıfırla
                   </button>
                 </div>
               </form>

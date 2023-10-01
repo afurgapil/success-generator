@@ -87,14 +87,14 @@ function Profile() {
           <h2 className="text-xl font-semibold mb-4">Add Student</h2>
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Ad"
             className="w-full p-2 border rounded mb-2"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <input
             type="password"
-            placeholder="Student Password"
+            placeholder="Öğrenci Şifresi"
             className="w-full p-2 border rounded mb-2"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -189,13 +189,13 @@ function Profile() {
               onClick={closeModal}
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded mr-2 transition-all duration-500 ease-out"
             >
-              Back
+              Vazgeç
             </button>
             <button
               onClick={handleAddStudent}
               className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-all duration-500 ease-out"
             >
-              Save
+              Kaydet
             </button>
           </div>
         </div>
@@ -212,7 +212,7 @@ function Profile() {
       </div>
       <div className="w-full md:w-1/2 mt-10 md:mt-0">
         <h2 className="text-white text-4xl text-center border-b border-white mx-2">
-          Your Childs
+          Çocuklarınız
         </h2>
         {students.length > 0 ? (
           <div className="flex flex-col">
@@ -250,7 +250,7 @@ function Profile() {
               className="my-4 mx-auto w-11/12 py-2 inline-flex justify-center items-center rounded-md bg-indigo-100 border border-transparent font-semibold text-indigo-500 hover:text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 ring-offset-white focus:ring-indigo-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
               onClick={openModal}
             >
-              Add Now!
+              Ekle!
             </button>
           </div>
         ) : (
@@ -260,7 +260,7 @@ function Profile() {
               className="my-4 mx-auto w-11/12 py-2 inline-flex justify-center items-center rounded-md bg-indigo-100 border border-transparent font-semibold text-indigo-500 hover:text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 ring-offset-white focus:ring-indigo-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
               onClick={openModal}
             >
-              Add Now!
+              Ekle!
             </button>
           </div>
         )}

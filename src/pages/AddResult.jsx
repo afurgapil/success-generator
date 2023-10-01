@@ -162,15 +162,13 @@ function AddResult() {
           className={`fixed inset-0 flex items-center justify-center z-50  transition-opacity duration-300`}
         >
           <div className="bg-white w-96 p-4 flex flex-col gap-y-2 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">
-              Add {examResult.type} Result
-            </h2>
+            <h2 className="text-xl font-semibold mb-4">{examResult.type}</h2>
             <div className="">
               <label
                 htmlFor="dateInput"
                 className="block text-gray-700 font-semibold"
               >
-                Select a Date:
+                Tarih:
               </label>
               <input
                 type="date"
@@ -184,7 +182,7 @@ function AddResult() {
             <input
               type="number"
               id="true"
-              placeholder="True Answer"
+              placeholder="Doğru "
               className="w-full p-2 border rounded mb-2"
               value={examResult.trueAnswer}
               onChange={(e) => {
@@ -198,7 +196,7 @@ function AddResult() {
             <input
               type="number"
               id="false"
-              placeholder="False Answer"
+              placeholder="Yanlış"
               className="w-full p-2 border rounded mb-2"
               value={examResult.falseAnswer}
               onChange={(e) => {
@@ -212,7 +210,7 @@ function AddResult() {
             <input
               type="number"
               id="empty"
-              placeholder="Empty Answer"
+              placeholder="Boş"
               className="w-full p-2 border rounded mb-2"
               value={examResult.emptyAnswer}
               onChange={(e) => {
@@ -226,7 +224,7 @@ function AddResult() {
               type="number"
               id="result"
               disabled
-              placeholder="Result"
+              placeholder="Net"
               className="w-full p-2 border rounded mb-2"
               value={examResult.result}
               onChange={(e) => {
@@ -244,7 +242,7 @@ function AddResult() {
                 }}
                 className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded mr-2 transition-all duration-500 ease-out"
               >
-                Back
+                Vazgeç
               </button>
               {examResult.isCalculated && (
                 <button
@@ -257,7 +255,7 @@ function AddResult() {
                   }}
                   className=" px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded transition-all duration-500 ease-out"
                 >
-                  Reset
+                  Sıfırla
                 </button>
               )}
               {examResult.isCalculated ? (
@@ -268,7 +266,7 @@ function AddResult() {
                   }}
                   className=" px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-all duration-500 ease-out"
                 >
-                  Save
+                  Kaydet
                 </button>
               ) : (
                 <button
@@ -277,7 +275,7 @@ function AddResult() {
                   }}
                   className="px-4 py-2 bg-red-500 text-white hover:bg-red-700 rounded mr-2 transition-all duration-500 ease-out"
                 >
-                  Calculate
+                  Hesapla
                 </button>
               )}
             </div>
@@ -290,14 +288,14 @@ function AddResult() {
         >
           <div className="bg-white w-96 p-4 flex flex-col gap-y-2 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">
-              Add {courseResult.course} Result
+              {courseResult.course}
             </h2>
             <div className="">
               <label
                 htmlFor="dateInput"
                 className="block text-gray-700 font-semibold"
               >
-                Select a Date:
+                Tarih:
               </label>
               <input
                 type="date"
@@ -311,7 +309,7 @@ function AddResult() {
             <input
               type="number"
               id="true"
-              placeholder="True Answer"
+              placeholder="Doğru "
               className="w-full p-2 border rounded mb-2"
               value={courseResult.trueAnswer}
               onChange={(e) => {
@@ -325,7 +323,7 @@ function AddResult() {
             <input
               type="number"
               id="false"
-              placeholder="False Answer"
+              placeholder="Yanlış"
               className="w-full p-2 border rounded mb-2"
               value={courseResult.falseAnswer}
               onChange={(e) => {
@@ -339,7 +337,7 @@ function AddResult() {
             <input
               type="number"
               id="empty"
-              placeholder="Empty Answer"
+              placeholder="Boş"
               className="w-full p-2 border rounded mb-2"
               value={courseResult.emptyAnswer}
               onChange={(e) => {
@@ -353,7 +351,7 @@ function AddResult() {
               type="number"
               id="result"
               disabled
-              placeholder="Result"
+              placeholder="Net"
               className="w-full p-2 border rounded mb-2"
               value={courseResult.result}
               onChange={(e) => {
@@ -371,7 +369,7 @@ function AddResult() {
                 }}
                 className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded mr-2 transition-all duration-500 ease-out"
               >
-                Back
+                Vazgeç
               </button>
               {courseResult.isCalculated && (
                 <button
@@ -395,7 +393,7 @@ function AddResult() {
                   }}
                   className=" px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded transition-all duration-500 ease-out"
                 >
-                  Save
+                  Kaydet
                 </button>
               ) : (
                 <button
@@ -413,7 +411,7 @@ function AddResult() {
       )}
       <div className="flex flex-col ">
         <h2 className="text-white text-center text-5xl font-bold mb-8 ">
-          General Exams
+          Genel Denemeler
         </h2>
         <div className="flex flex-col my-4 md:flex-row justify-around items-center">
           {user.Graduation === "YKS" ? (
@@ -429,7 +427,7 @@ function AddResult() {
                   }));
                 }}
               >
-                Add TYT
+                TYT
               </button>
               <button
                 type="button"
@@ -442,7 +440,7 @@ function AddResult() {
                   }));
                 }}
               >
-                Add AYT
+                AYT
               </button>
             </>
           ) : (
@@ -457,14 +455,14 @@ function AddResult() {
                 }));
               }}
             >
-              Add LGS
+              LGS
             </button>
           )}
         </div>
       </div>
       <div className="flex flex-col my-4  justify-around items-center w-full">
         <h2 className="text-white text-center text-5xl font-bold mb-8 ">
-          Course Exams
+          Bölüm Denemeleri
         </h2>
         <div className="flex flex-col md:flex-row justify-center items-center  md:justify-evenly md:items-start w-full">
           <ul className="flex flex-col justify-center">

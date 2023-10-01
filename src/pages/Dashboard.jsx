@@ -8,7 +8,7 @@ import {
   HorizontalGridLines,
   MarkSeries,
 } from "react-vis";
-import { LineSeries } from "react-vis";
+import { LineSeries, VerticalBarSeries, VerticalGridLines } from "react-vis";
 
 function Dashboard() {
   const user = useUser();
@@ -16,6 +16,9 @@ function Dashboard() {
   const [selectedStudent, setSelectedStudent] = useState();
   const [tyt, setTyt] = useState([]);
   const [ayt, setAyt] = useState([]);
+  const [tytAvarage, setTytAvarage] = useState(null);
+  const [aytAvarage, setAytAvarage] = useState(null);
+  const [examAvarage, setExamAvarage] = useState(null);
   const [examResults, setExamResults] = useState([]);
   const [courseLength, setCourseLength] = useState("");
   const [courseData, setCourseData] = useState({});
@@ -55,9 +58,20 @@ function Dashboard() {
     if (selectedStudent) {
       fetchExamResults();
       fetchCourseResults();
+      calculateTytAvarage();
     }
   }, [selectedStudent]);
-
+  useEffect(() => {
+    if (tyt) {
+      calculateTytAvarage();
+    }
+    if (ayt) {
+      calculateAytAvarage();
+    }
+    if (examResults) {
+      calculateExamAvarage();
+    }
+  }, [tyt, ayt, examResults]);
   const fetchStudents = async () => {
     try {
       const response = await fetch(`${API_URL}/user/get-students/${user.id}`);
@@ -82,10 +96,10 @@ function Dashboard() {
       const data = await response.json();
       const examResults = data.data;
       setExamResults(examResults);
-      console.log(examResults);
       const tytResults = examResults.filter((result) => result.Type === "TYT");
       const aytResults = examResults.filter((result) => result.Type === "AYT");
       setTyt(tytResults);
+      console.log(tyt);
       setAyt(aytResults);
     } catch (error) {
       console.error("Dersler getirilirken hata oluştu:", error);
@@ -116,6 +130,39 @@ function Dashboard() {
       console.error("Dersler getirilirken hata oluştu:", error);
     }
   };
+  const calculateTytAvarage = () => {
+    let res = 0;
+    if (tyt.length > 0) {
+      for (let i = 0; i < tyt.length; i++) {
+        const result = parseFloat(tyt[i].Result);
+        res += result;
+      }
+      const ava = res / tyt.length;
+      setTytAvarage(ava);
+    }
+  };
+  const calculateAytAvarage = () => {
+    let res = 0;
+    if (ayt.length > 0) {
+      for (let i = 0; i < ayt.length; i++) {
+        const result = parseFloat(ayt[i].Result);
+        res += result;
+      }
+      const ava = res / ayt.length;
+      setAytAvarage(ava);
+    }
+  };
+  const calculateExamAvarage = () => {
+    let res = 0;
+    if (examResults.length > 0) {
+      for (let i = 0; i < examResults.length; i++) {
+        const result = parseFloat(examResults[i].Result);
+        res += result;
+      }
+      const ava = res / examResults.length;
+      setExamAvarage(ava);
+    }
+  };
   return (
     <div className="bg-bg min-h-screen py-6 px-12 flex flex-col justify-start items-center">
       <div className="w-full flex flex-row justify-center items-start border-b-2 border-gray-100 py-4">
@@ -144,194 +191,259 @@ function Dashboard() {
       </div>
       {selectedStudent && (
         <div className="">
-          <div id="general">
+          <div id="avarage">
             {selectedStudent.Graduation === "YKS" ? (
-              <div className="flex flex-col justify-center items-center overflow-auto py-10">
-                <h2 className="text-center text-white text-5xl">
-                  Exam Results
-                </h2>
-                {examResults.length > 0 ? (
-                  <XYPlot width={windowWidth} height={300}>
-                    <HorizontalGridLines />
-                    <XAxis />
-                    <YAxis />
-                    <MarkSeries
-                      strokeWidth={2}
-                      opacity="0.8"
-                      sizeRange={[15, 15]}
-                      data={tyt.map((result, index) => ({
-                        x: index + 1,
-                        y: result.Result,
-                      }))}
-                    />
-                    <MarkSeries
-                      strokeWidth={2}
-                      color="red"
-                      opacity="0.8"
-                      sizeRange={[15, 15]}
-                      data={ayt.map((result, index) => ({
-                        x: index + 1,
-                        y: result.Result,
-                      }))}
-                    />
-                    <LineSeries
-                      className="first-series"
-                      data={tyt.map((result, index) => ({
-                        x: index + 1,
-                        y: result.Result,
-                      }))}
-                      color="green"
-                    />
-                    <LineSeries
-                      className="first-series"
-                      data={ayt.map((result, index) => ({
-                        x: index + 1,
-                        y: result.Result,
-                      }))}
-                      color="red"
-                    />
-                  </XYPlot>
-                ) : (
-                  <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
-                    No data yet :/
-                  </h3>
-                )}
+              <div>
+                <div className="flex flex-col justify-center items-center overflow-auto py-10">
+                  <h2 className="text-center text-white text-5xl">Ortalama</h2>
+                  {examAvarage ? (
+                    <XYPlot
+                      className="my-10"
+                      xType="ordinal"
+                      stackBy="y"
+                      width={windowWidth}
+                      height={300}
+                    >
+                      <VerticalGridLines />
+                      <HorizontalGridLines />
+                      <XAxis />
+                      <YAxis />
+                      <VerticalBarSeries
+                        cluster="2016"
+                        color={
+                          colors[Math.floor(Math.random() * colors.length)]
+                        }
+                        data={[{ x: "TYT Ortalama", y: tytAvarage }]}
+                      />
+                      <VerticalBarSeries
+                        cluster="2016"
+                        color={
+                          colors[Math.floor(Math.random() * colors.length)]
+                        }
+                        data={[{ x: "AYT Ortalama", y: aytAvarage }]}
+                      />
+                    </XYPlot>
+                  ) : (
+                    <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
+                      Henüz bir veri yok :/
+                    </h3>
+                  )}
+                </div>
+                <div className="flex flex-col justify-center items-center overflow-auto py-10">
+                  <h2 className="text-center text-white text-5xl">
+                    Sınav Sonuçları
+                  </h2>
+                  {examResults.length > 0 ? (
+                    <div className="mx-auto flex flex-col justify-center items-center">
+                      <XYPlot width={windowWidth} height={300}>
+                        <HorizontalGridLines />
+                        <XAxis />
+                        <YAxis />
+                        <MarkSeries
+                          strokeWidth={2}
+                          opacity="0.8"
+                          sizeRange={[15, 15]}
+                          data={tyt.map((result, index) => ({
+                            x: index + 1,
+                            y: result.Result,
+                          }))}
+                        />
+                        <MarkSeries
+                          strokeWidth={2}
+                          color="red"
+                          opacity="0.8"
+                          sizeRange={[15, 15]}
+                          data={ayt.map((result, index) => ({
+                            x: index + 1,
+                            y: result.Result,
+                          }))}
+                        />
+                        <LineSeries
+                          className="first-series"
+                          data={tyt.map((result, index) => ({
+                            x: index + 1,
+                            y: result.Result,
+                          }))}
+                          color="green"
+                        />
+                        <LineSeries
+                          className="first-series"
+                          data={ayt.map((result, index) => ({
+                            x: index + 1,
+                            y: result.Result,
+                          }))}
+                          color="red"
+                        />
+                      </XYPlot>
+                    </div>
+                  ) : (
+                    <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
+                      Henüz bir veri yok :/
+                    </h3>
+                  )}
+                </div>
+                <div className="flex flex-col justify-center items-center overflow-auto py-10">
+                  <h2 className="text-center text-white text-5xl">
+                    Ders Sonuçları
+                  </h2>
+                  {courseLength > 0 ? (
+                    Object.keys(courseData).map((courseName, index) => {
+                      const courseResults = courseData[courseName];
+                      if (courseResults.length >= 2) {
+                        return (
+                          <div key={courseName}>
+                            <h2 className="text-white text-xl font-semibold">
+                              {courseName}
+                            </h2>
+                            <XYPlot width={windowWidth} height={300}>
+                              <HorizontalGridLines />
+                              <XAxis />
+                              <YAxis />
+                              <MarkSeries
+                                strokeWidth={2}
+                                opacity="0.8"
+                                sizeRange={[15, 15]}
+                                data={courseResults.map((result, index) => ({
+                                  x: index + 1,
+                                  y: parseFloat(result.Result),
+                                }))}
+                                color={colors[index % colors.length]}
+                              />
+                              <LineSeries
+                                className="first-series"
+                                data={courseResults.map((result, index) => ({
+                                  x: index + 1,
+                                  y: parseFloat(result.Result),
+                                }))}
+                                color={colors[index % colors.length]}
+                              />
+                            </XYPlot>
+                          </div>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })
+                  ) : (
+                    <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
+                      Henüz bir veri yok :/
+                    </h3>
+                  )}
+                </div>
               </div>
             ) : selectedStudent.Graduation === "LGS" ? (
-              <div className="flex flex-col justify-center items-center overflow-auto py-10">
-                <h2 className="text-center text-white text-5xl">
-                  Exam Results
-                </h2>
-                {examResults.length > 0 ? (
-                  <XYPlot width={windowWidth} height={300}>
-                    <HorizontalGridLines />
-                    <XAxis />
-                    <YAxis />
-                    <MarkSeries
-                      strokeWidth={2}
-                      opacity="0.8"
-                      sizeRange={[15, 15]}
-                      data={examResults.map((result, index) => ({
-                        x: index + 1,
-                        y: result.Result,
-                      }))}
-                      color="red"
-                    />
-                    <LineSeries
-                      className="first-series"
-                      data={examResults.map((result, index) => ({
-                        x: index + 1,
-                        y: result.Result,
-                      }))}
-                      color="red"
-                    />
-                  </XYPlot>
-                ) : (
-                  <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
-                    No data yet :/
-                  </h3>
-                )}
-              </div>
-            ) : null}
-          </div>
-          <div id="course">
-            {selectedStudent.Graduation === "YKS" ? (
-              <div className="flex flex-col justify-center items-center overflow-auto py-10">
-                <h2 className="text-center text-white text-5xl">
-                  Course Results
-                </h2>
-                {courseLength > 0 ? (
-                  Object.keys(courseData).map((courseName, index) => {
-                    const courseResults = courseData[courseName];
-                    if (courseResults.length >= 2) {
-                      return (
-                        <div key={courseName}>
-                          <h2 className="text-white text-xl font-semibold">
-                            {courseName}
-                          </h2>
-                          <XYPlot width={windowWidth} height={300}>
-                            <HorizontalGridLines />
-                            <XAxis />
-                            <YAxis />
-                            <MarkSeries
-                              strokeWidth={2}
-                              opacity="0.8"
-                              sizeRange={[15, 15]}
-                              data={courseResults.map((result, index) => ({
-                                x: index + 1,
-                                y: parseFloat(result.Result),
-                              }))}
-                              color={colors[index % colors.length]}
-                            />
-                            <LineSeries
-                              className="first-series"
-                              data={courseResults.map((result, index) => ({
-                                x: index + 1,
-                                y: parseFloat(result.Result),
-                              }))}
-                              color={colors[index % colors.length]}
-                            />
-                          </XYPlot>
-                        </div>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })
-                ) : (
-                  <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
-                    No data yet :/
-                  </h3>
-                )}
-              </div>
-            ) : selectedStudent.Graduation === "LGS" ? (
-              <div className="flex flex-col justify-center items-center overflow-auto py-10">
-                <h2 className="text-center text-white text-5xl">
-                  Course Results
-                </h2>
-                {courseLength > 0 ? (
-                  Object.keys(courseData).map((courseName, index) => {
-                    const courseResults = courseData[courseName];
-                    if (courseResults.length >= 2) {
-                      return (
-                        <div key={courseName}>
-                          <h2 className="text-white text-xl font-semibold">
-                            {courseName}
-                          </h2>
-                          <XYPlot width={windowWidth} height={300}>
-                            <HorizontalGridLines />
-                            <XAxis />
-                            <YAxis />
-                            <MarkSeries
-                              strokeWidth={2}
-                              opacity="0.8"
-                              sizeRange={[15, 15]}
-                              data={courseResults.map((result, index) => ({
-                                x: index + 1,
-                                y: parseFloat(result.Result),
-                              }))}
-                              color={colors[index % colors.length]}
-                            />
-                            <LineSeries
-                              className="first-series"
-                              data={courseResults.map((result, index) => ({
-                                x: index + 1,
-                                y: parseFloat(result.Result),
-                              }))}
-                              color={colors[index % colors.length]}
-                            />
-                          </XYPlot>
-                        </div>
-                      );
-                    } else {
-                      return null;
-                    }
-                  })
-                ) : (
-                  <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
-                    No data yet :/
-                  </h3>
-                )}
+              <div>
+                <div className="flex flex-col justify-center items-center overflow-auto py-10">
+                  <h2 className="text-center text-white text-5xl">Ortalama</h2>
+                  {examResults ? (
+                    <XYPlot
+                      className="my-10"
+                      xType="ordinal"
+                      stackBy="y"
+                      width={windowWidth}
+                      height={300}
+                    >
+                      <VerticalGridLines />
+                      <HorizontalGridLines />
+                      <XAxis />
+                      <YAxis />
+
+                      <VerticalBarSeries
+                        cluster="2016"
+                        color={
+                          colors[Math.floor(Math.random() * colors.length)]
+                        }
+                        data={[{ x: "LGS Ortalama", y: examAvarage }]}
+                      />
+                    </XYPlot>
+                  ) : (
+                    <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
+                      Henüz bir veri yok :/
+                    </h3>
+                  )}
+                </div>
+                <div className="flex flex-col justify-center items-center overflow-auto py-10">
+                  <h2 className="text-center text-white text-5xl">
+                    Sınav Sonuçları
+                  </h2>
+                  {examResults.length > 0 ? (
+                    <XYPlot width={windowWidth} height={300}>
+                      <HorizontalGridLines />
+                      <XAxis />
+                      <YAxis />
+                      <MarkSeries
+                        strokeWidth={2}
+                        opacity="0.8"
+                        sizeRange={[15, 15]}
+                        data={examResults.map((result, index) => ({
+                          x: index + 1,
+                          y: result.Result,
+                        }))}
+                        color="red"
+                      />
+                      <LineSeries
+                        className="first-series"
+                        data={examResults.map((result, index) => ({
+                          x: index + 1,
+                          y: result.Result,
+                        }))}
+                        color="red"
+                      />
+                    </XYPlot>
+                  ) : (
+                    <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
+                      Henüz bir veri yok :/
+                    </h3>
+                  )}
+                </div>
+                <div className="flex flex-col justify-center items-center overflow-auto py-10">
+                  <h2 className="text-center text-white text-5xl">
+                    Ders Sonuçları
+                  </h2>
+                  {courseLength > 0 ? (
+                    Object.keys(courseData).map((courseName, index) => {
+                      const courseResults = courseData[courseName];
+                      if (courseResults.length >= 2) {
+                        return (
+                          <div key={courseName}>
+                            <h2 className="text-white text-xl font-semibold">
+                              {courseName}
+                            </h2>
+                            <XYPlot width={windowWidth} height={300}>
+                              <HorizontalGridLines />
+                              <XAxis />
+                              <YAxis />
+                              <MarkSeries
+                                strokeWidth={2}
+                                opacity="0.8"
+                                sizeRange={[15, 15]}
+                                data={courseResults.map((result, index) => ({
+                                  x: index + 1,
+                                  y: parseFloat(result.Result),
+                                }))}
+                                color={colors[index % colors.length]}
+                              />
+                              <LineSeries
+                                className="first-series"
+                                data={courseResults.map((result, index) => ({
+                                  x: index + 1,
+                                  y: parseFloat(result.Result),
+                                }))}
+                                color={colors[index % colors.length]}
+                              />
+                            </XYPlot>
+                          </div>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })
+                  ) : (
+                    <h3 className="my-10 underline underline-offset-2 text-gray-600  text-center text-5xl">
+                      Henüz bir veri yok :/
+                    </h3>
+                  )}
+                </div>
               </div>
             ) : null}
           </div>
