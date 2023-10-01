@@ -4,7 +4,7 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const pool = require("../hooks/usePool").default;
+const pool = require("../hooks/usePool");
 dotenv.config();
 
 const secretKey = process.env.SECRET_KEY;
