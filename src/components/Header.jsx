@@ -17,7 +17,7 @@ function Header() {
             className="flex-none text-xl font-semibold dark:text-white"
             to="/"
           >
-            Success Generator
+            Lorem Ipsum
           </Link>
           <div className="sm:hidden">
             <button

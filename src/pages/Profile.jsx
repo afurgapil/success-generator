@@ -11,7 +11,13 @@ function Profile() {
   const [password, setPassword] = useState("");
   const [graduation, setGraduation] = useState("");
   const [niveau, setNiveau] = useState("");
-
+  const [changePassword, setChangePassword] = useState({
+    oldPassword: "",
+    newPassword: "",
+    newPasswordAgain: "",
+    isMatch: null,
+    isChangeModelOpen: false,
+  });
   useEffect(() => {
     if (user) {
       fetchStudents();
@@ -203,11 +209,25 @@ function Profile() {
       <div className="w-full md:w-1/2 h-1/2  bg-slate-400 p-8 shadow-md rounded-lg mx-2">
         <div className="text-center">
           <img
-            src="https://via.placeholder.com/150"
+            src="https://via.placeholder.com/96"
             alt="Profile Picture"
             className="w-24 h-24 rounded-full mx-auto mb-4"
           />
           <h1 className="text-2xl font-semibold">{user.e_mail}</h1>
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <button
+            type="button"
+            className="w-9/12 my-2 py-4   inline-flex justify-center items-center rounded-md bg-green-100 border border-transparent font-semibold text-green-500 hover:text-green-900 hover:bg-green-500 focus:outline-none focus:ring-2 ring-offset-white focus:ring-green-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
+          >
+            Şifre Değiştir
+          </button>
+          <button
+            type="button"
+            className="w-9/12 my-2 py-4   inline-flex justify-center items-center rounded-md bg-red-100 border border-transparent font-semibold text-red-500 hover:text-red-900 hover:bg-red-500 focus:outline-none focus:ring-2 ring-offset-white focus:ring-red-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800"
+          >
+            Hesabı Sil
+          </button>
         </div>
       </div>
       <div className="w-full md:w-1/2 mt-10 md:mt-0">
